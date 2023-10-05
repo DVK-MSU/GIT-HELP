@@ -584,3 +584,51 @@ git commit -am "Navigation fixs"   # сделать коммит
 *.css  diff=css
 *.scss diff=css
 ```
+### Отмена индексации файла с помощью git restore
+В следующих двух разделах показано, как работать с индексом и изменениями рабочей копии с помощью git restore. Приятно то, что команда, которую вы используете для определения состояния этих двух областей, также напоминает вам, как отменить изменения в них. Например, предположим, что вы изменили два файла и хотите зафиксировать их как два отдельных изменения, но случайно набираете git add * и индексируете их оба. Как вы можете убрать из индекса один из двух? Команда git status напоминает вам:
+
+``` bash
+$ git add *
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   CONTRIBUTING.md
+	renamed:    README.md -> README
+```
+Прямо под текстом «Changes to be committed», написано использовать git restore --staged <file> …​ для отмены индексации файла. Итак, давайте воспользуемся этим советом, чтобы убрать из индекса файл CONTRIBUTING.md:
+
+``` bash
+$ git restore --staged CONTRIBUTING.md
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	renamed:    README.md -> README
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   CONTRIBUTING.md
+Файл CONTRIBUTING.md изменен, но снова не индексирован.
+```
+
+### Откат изменённого файла с помощью git restore
+Что, если вы поймете, что не хотите сохранять изменения в файле CONTRIBUTING.md? Как легко его откатить — вернуть обратно к тому, как он выглядел при последнем коммите (или изначально клонирован, или каким-либо образом помещён в рабочий каталог)? К счастью, git status тоже говорит, как это сделать. В выводе последнего примера, неиндексированная область выглядит следующим образом:
+
+```bash
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   CONTRIBUTING.md
+```
+Он довольно недвусмысленно говорит, как отменить сделанные вами изменения. Давайте сделаем то, что написано:
+
+```bash
+$ git restore CONTRIBUTING.md
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	renamed:    README.md -> README
+```
